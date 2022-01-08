@@ -32,30 +32,29 @@ namespace WishList.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult Register(RegisterViewModel registerViewModel)
+        public IActionResult Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(registerViewModel);
+                return View(model);
             }
             var result = _userManager.CreateAsync(
                 new ApplicationUser()
                 {
-                    UserName = registerViewModel.Email,
-                    Email = registerViewModel.Email
+                    UserName = model.Email,
+                    Email = model.Email
                 
                 }, 
-                registerViewModel.Password).Result;
+                model.Password).Result;
             if (!result.Succeeded)
             {
                 foreach(var error in result.Errors)
                 {
                     ModelState.AddModelError("Password", error.Description);
                 }
-                return View(registerViewModel);
+                return View(model);
             }
-            RedirectToAction("Index", "Home");
-            return View(registerViewModel);
+            return RedirectToAction("Index", "Home");
         }
     }
 }
